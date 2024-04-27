@@ -1,5 +1,5 @@
 import { defineNuxtPlugin, useCookie } from 'nuxt/app';
-import { useAuth } from '../composables/useAuth.js';
+import { useAuth } from '../composables/useAuth';
 
 export default defineNuxtPlugin(async () => {
   const { token, get_user } = useAuth();

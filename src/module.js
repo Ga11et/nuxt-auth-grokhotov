@@ -22,8 +22,8 @@ export default defineNuxtModule({
       },
     ]);
 
-    addPlugin(resolve('./runtime/plugins/auth.server.js'));
-    addPlugin(resolve('./runtime/plugins/auth.client.js'));
+    addPlugin(resolve('./runtime/plugins/auth-server'));
+    addPlugin(resolve('./runtime/plugins/auth-client'));
 
     logger.success(`${PACKAGE_NAME} setup done`);
   },
