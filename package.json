@@ -18,7 +18,7 @@
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
-    "release": "npm run prepack && changelogen --release",
+    "release": "npm run prepack && changelogen --release && npm publish",
     "lint": "eslint ./src"
   },
   "resolutions": {
