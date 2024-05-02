@@ -27,23 +27,21 @@ function createFolder(folderPath) {
 }
 
 function findFileRecursively(directoryPath, fileName) {
-  let founded = false;
-
   try {
     const files = fs.readdirSync(directoryPath);
 
     for (const file of files) {
-      const ignore = ['node_modules', '.git', 'dist', '.nuxt'];
+      const ignore = ['node_modules', '.git', 'dist', '.nuxt', '.output'];
       if (ignore.includes(file)) continue;
 
       const fullPath = `${directoryPath}/${file}`;
 
       if (file === fileName) {
-        founded = true;
         console.log(`${fullPath} found.`);
         return directoryPath;
       } else if (fs.statSync(fullPath).isDirectory()) {
-        return findFileRecursively(fullPath, fileName);
+        const path = findFileRecursively(fullPath, fileName);
+        if (path) return path;
       }
     }
 
