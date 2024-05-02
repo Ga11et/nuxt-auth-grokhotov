@@ -1,7 +1,10 @@
 #!/usr/bin/env node
 
 import fs from 'fs';
-import { exec } from 'child_process';
+import cp from 'child_process';
+import util from 'util';
+
+const exec = util.promisify(cp.exec);
 
 function createFile(filePath, content) {
   try {
@@ -86,23 +89,16 @@ function changeDirectory(directoryPath) {
     console.error(`Error changing directory: ${err.message}`);
   }
 }
-function runYarnAdd(packageName) {
+async function runYarnAdd(packageName) {
   console.log(`Started fetching ${packageName}`);
   const command = `yarn add ${packageName}`;
 
-  exec(command, (error, stdout, stderr) => {
-    if (error) {
-      console.error(`Error running yarn add: ${error.message}`);
-      return;
-    }
-
-    if (stderr) {
-      console.error(`Error running yarn add: ${stderr}`);
-      return;
-    }
-
-    console.log(`Yarn add command executed successfully.`);
-  });
+  try {
+    const { stdout } = await exec(command);
+    console.log(`Yarn add command executed successfully.\n${stdout}`);
+  } catch (error) {
+    console.error(`Error running yarn add: ${error.message}`);
+  }
 }
 
 const login = `export default eventHandler(async (event) => {
@@ -263,8 +259,10 @@ if (path) {
   addModule(path, 'nuxt-auth-grokhotov');
 
   changeDirectory(path);
-  runYarnAdd('nuxt-auth-grokhotov');
-  runYarnAdd('jsonwebtoken');
+  await runYarnAdd('nuxt-auth-grokhotov');
+  await runYarnAdd('jsonwebtoken');
+
+  console.log('Успешное завершение скрипта');
 } else {
   console.error('Ошибка исполнения скрипта, nuxt.config.js не найден');
 }
