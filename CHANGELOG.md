@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v0.1.6
+
+[compare changes](https://github.com/Ga11et/nuxt-auth-grokhotov/compare/v0.1.5...v0.1.6)
+
+### 🏡 Chore
+
+- **release:** V0.1.5 ([e57ec78](https://github.com/Ga11et/nuxt-auth-grokhotov/commit/e57ec78))
+
+### ❤️ Contributors
+
+- Fyodor <f.sivkov@positron-it.ru>
+
 ## v0.1.5
 
 [compare changes](https://github.com/Ga11et/nuxt-auth-grokhotov/compare/v0.1.4...v0.1.5)
