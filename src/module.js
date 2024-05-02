@@ -21,6 +21,9 @@ export default defineNuxtModule({
       tokenName: 'auth:token',
       dataName: 'auth:data',
     },
+    session: {
+      maxAge: 1000 * 60 * 10,
+    },
   },
   setup(options, nuxt) {
     const logger = useLogger(PACKAGE_NAME);

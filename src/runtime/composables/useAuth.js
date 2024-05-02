@@ -33,6 +33,7 @@ export const useAuth = () => {
     });
   }
   async function refresh() {
+    console.log('refresh');
     if (!token.value) return;
 
     return $fetch('/api' + refreshOption.path, {

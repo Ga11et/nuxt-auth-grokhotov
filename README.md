@@ -57,6 +57,10 @@ export default defineNuxtConfig({
       tokenName: 'auth:token',
       dataName: 'auth:data',
     },
+    # Управление интервалом обновления сессии
+    session: {
+      maxAge: 1000 * 60 * 10,
+    },
   },
 });
 ```

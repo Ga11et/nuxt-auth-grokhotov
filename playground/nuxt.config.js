@@ -15,5 +15,8 @@ export default defineNuxtConfig({
       tokenName: 'auth:token',
       dataName: 'auth:data',
     },
+    session: {
+      maxAge: 1000 * 10,
+    },
   },
 });
