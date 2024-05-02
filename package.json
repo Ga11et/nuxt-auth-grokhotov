@@ -1,6 +1,6 @@
 {
   "name": "nuxt-auth-grokhotov",
-  "version": "0.1.9",
+  "version": "0.2.0",
   "description": "Auth nuxt 3 module",
   "repository": "https://github.com/Ga11et/nuxt-auth-grokhotov",
   "license": "MIT",
@@ -27,6 +27,12 @@
   "bin": {
     "my-npx-command": "./index.js"
   },
+  "keywords": [
+    "nuxt 3",
+    "authentication",
+    "refresh token",
+    "access token"
+  ],
   "dependencies": {
     "@nuxt/kit": "^3.11.2"
   },
