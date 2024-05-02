@@ -1,6 +1,6 @@
 {
   "name": "nuxt-auth-grokhotov",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Auth nuxt 3 module",
   "repository": "https://github.com/Ga11et/nuxt-auth-grokhotov",
   "license": "MIT",
@@ -37,6 +37,7 @@
     "@nuxt/module-builder": "^0.5.5",
     "@nuxt/schema": "^3.11.2",
     "changelogen": "^0.5.5",
-    "nuxt": "^3.11.2"
+    "nuxt": "^3.11.2",
+    "typescript": "^5.4.5"
   }
 }
