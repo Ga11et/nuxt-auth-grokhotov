@@ -83,7 +83,6 @@ async function changeDirectory(directoryPath) {
       }
 
       console.log(`Directory changed successfully.`);
-      console.log(`stdout: ${stdout}`);
     });
   } catch (err) {
     console.error(`Error changing directory: ${err.message}`);
