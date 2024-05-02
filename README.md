@@ -22,7 +22,7 @@ export default defineNuxtConfig({
 /server/api/auth/refresh.get.js
 /server/api/auth/user.get.js
 
-# Эти два файла создаются как моковые эндпоинты, которые находятся на бэке
+# Эти два файла создаются как моковые эндпоинты, которые будут находиться на бэке
 /server/api/php-login.js
 /server/api/php-refresh.js
 ```
