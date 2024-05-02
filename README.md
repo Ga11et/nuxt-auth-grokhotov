@@ -1,84 +1,221 @@
-<!--
-Get your module up and running quickly.
+# nuxt-auth-grokhotov
 
-Find and replace all on all files (CMD+SHIFT+F):
-- Name: My Module
-- Package name: my-module
-- Description: My new Nuxt module
--->
+## Quick Start
 
-# My Module
+```sh
+yarn add nuxt-auth-grokhotov
+```
 
-[![npm version][npm-version-src]][npm-version-href]
-[![npm downloads][npm-downloads-src]][npm-downloads-href]
-[![License][license-src]][license-href]
-[![Nuxt][nuxt-src]][nuxt-href]
+**Добавить в nuxt.config.js**
 
-My new Nuxt module for doing amazing things.
+```sh
+export default defineNuxtConfig({
+  modules: ['nuxt-auth-grokhotov'],
+});
+```
 
-- [✨ &nbsp;Release Notes](/CHANGELOG.md)
-<!-- - [🏀 Online playground](https://stackblitz.com/github/your-org/my-module?file=playground%2Fapp.vue) -->
-<!-- - [📖 &nbsp;Documentation](https://example.com) -->
+**Создать 6 файлов в папке с проектом**
+
+```sh
+/server/api/auth/login.post.js
+/server/api/auth/logout.post.js
+/server/api/auth/refresh.get.js
+/server/api/auth/user.get.js
+
+# Эти два файла создаются как моковые эндпоинты, которые находятся на бэке
+/server/api/php-login.js
+/server/api/php-refresh.js
+```
 
 ## Features
 
-<!-- Highlight some of the features your module provide here -->
-- ⛰ &nbsp;Foo
-- 🚠 &nbsp;Bar
-- 🌲 &nbsp;Baz
+`nuxt-auth-grokhotov` это библиотека, которая реализует базовый функционал авторизации
 
-## Quick Setup
+### Функционал включает в себя:
 
-Install the module to your Nuxt application with one command:
+- ✔️ Composable `useAuth`:
+  - actions: `login`, `logout`, `refresh`, `get_user`
+  - getters: `token`, `data`
+- ✔️ Application-side middleware, которая автоматически делает запрос refresh и get_user, по истечению настраимового интервала
+- ✔️ Server-side middleware, которая авторизует пользователя, при существовании refresh токен в куках
+- ✔️ Жизненный цикл сессии:
+  - Перезагрузка сессии с настраиваемой периодичностью
+  - Перезагрузка сессии, при активации вкладки браузера
+  - Получение сессии при начальной загрузке приложения server-side
+- ✔️ REST API:
+  - `POST /login`,
+    - Запрос на аутентификацию, используя `cridentials` (логин, пароль)
+    - Устанавливает `refresh` `cookie` и возвращает `access` токен в респонсе
+  - `POST /logout`,
+    - Удаляет `refresh` `cookie` и возвращает `{ status: 'OK' }` в респонсе
+  - `GET /refresh`,
+    - Запрос на авторизацию пользователя при помощи `refresh` токена в `cookie`
+    - Устанавливает `refresh` `cookie` и возвращает `access` токен в респонсе
+  - `GET /user`
+    - Запрос на получение пользователя из `access` токена при помощи расшифровки `jsonwebtoken`
 
-```bash
-npx nuxi module add my-module
+## Начальная настройка
+
+_/server/api/auth/login.post.js_
+
+```
+export default eventHandler(async (event) => {
+  const body = await readBody(event);
+
+  return $fetch
+    .raw('/api/php-login', {
+      method: 'POST',
+      body,
+    })
+    .then((resp) => {
+      for (const iterator of resp.headers) {
+        if (iterator[0] === 'set-cookie') {
+          appendResponseHeader(event, 'set-cookie', iterator[1]);
+        }
+      }
+
+      return {
+        token: resp._data.accessToken,
+      };
+    })
+    .catch((err) => {
+      throw createError({
+        statusCode: 422,
+        statusMessage: 'login failed, check cridentials',
+      });
+    });
+});
 ```
 
-That's it! You can now use My Module in your Nuxt app ✨
+_/server/api/auth/logout.post.js_
 
+```
+export default eventHandler((event) => {
+  deleteCookie(event, 'refresh_token');
+  return { status: 'OK' };
+});
+```
 
-## Contribution
+_/server/api/auth/refresh.get.js_
 
-<details>
-  <summary>Local development</summary>
-  
-  ```bash
-  # Install dependencies
-  npm install
-  
-  # Generate type stubs
-  npm run dev:prepare
-  
-  # Develop with the playground
-  npm run dev
-  
-  # Build the playground
-  npm run dev:build
-  
-  # Run ESLint
-  npm run lint
-  
-  # Run Vitest
-  npm run test
-  npm run test:watch
-  
-  # Release new version
-  npm run release
-  ```
+```
+export default eventHandler(async (event) => {
+  const cookie_refresh = getCookie(event, 'refresh_token');
 
-</details>
+  if (!cookie_refresh) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'Unauthorized, refreshToken is undefined',
+    });
+  }
 
+  return $fetch
+    .raw('/api/php-refresh', {
+      headers: {
+        Cookie: `refresh_token=${cookie_refresh}`,
+      },
+    })
+    .then(async (resp) => {
+      for (const iterator of resp.headers) {
+        if (iterator[0] === 'set-cookie') {
+          appendResponseHeader(event, 'set-cookie', iterator[1]);
+        }
+      }
 
-<!-- Badges -->
-[npm-version-src]: https://img.shields.io/npm/v/my-module/latest.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-version-href]: https://npmjs.com/package/my-module
+      return {
+        token: resp._data.accessToken,
+      };
+    })
+    .catch(() => {
+      throw createError({
+        statusCode: 422,
+        statusMessage: 'refresh failed, check token',
+      });
+    });
+});
+```
 
-[npm-downloads-src]: https://img.shields.io/npm/dm/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[npm-downloads-href]: https://npmjs.com/package/my-module
+_/server/api/auth/user.get.js_
 
-[license-src]: https://img.shields.io/npm/l/my-module.svg?style=flat&colorA=020420&colorB=00DC82
-[license-href]: https://npmjs.com/package/my-module
+```
+import jwt from 'jsonwebtoken';
 
-[nuxt-src]: https://img.shields.io/badge/Nuxt-020420?logo=nuxt.js
-[nuxt-href]: https://nuxt.com
+const extractToken = (authorization) => {
+  const [, token] = authorization.split(`Bearer `);
+  return token;
+};
+
+export default eventHandler((event) => {
+  const authorization = getRequestHeader(event, 'authorization');
+  if (!authorization) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: 'authorization header is required',
+    });
+  }
+
+  const token = extractToken(authorization);
+
+  return jwt.decode(token);
+});
+```
+
+_/server/api/php-login.js_
+
+```
+const accessToken
+  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlciI6eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwicGljdHVyZSI6Imh0dHBzOi8vZ2l0aHViLmNvbS9udXh0LnBuZyIsIm5hbWUiOiJVc2VyIHVzZXJuYW1lIn0sImlhdCI6MTUxNjIzOTAyMn0.7TFU_1A10fXh0u2Hn7UZ0XXZTL_A0O2dNBpzUFeCIEk';
+const refreshToken = 'refresh_token';
+
+export default eventHandler(async (event) => {
+  const body = await readBody(event);
+
+  if (body.name === 'name' && body.pass === 'pass') {
+    setCookie(event, 'refresh_token', refreshToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+      sameSite: 'lax',
+    });
+
+    return {
+      accessToken,
+    };
+  }
+
+  throw createError({
+    statusCode: 422,
+    statusMessage: 'Wrong credentials',
+  });
+});
+```
+
+_/server/api/php-refresh.js_
+
+```
+const accessToken
+  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlciI6eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwicGljdHVyZSI6Imh0dHBzOi8vZ2l0aHViLmNvbS9udXh0LnBuZyIsIm5hbWUiOiJVc2VyIHVzZXJuYW1lIn0sImlhdCI6MTUxNjIzOTAyMn0.7TFU_1A10fXh0u2Hn7UZ0XXZTL_A0O2dNBpzUFeCIEk';
+const refreshToken = 'refresh_token';
+
+export default eventHandler(async (event) => {
+  const cookie_refresh = getCookie(event, 'refresh_token');
+
+  if (cookie_refresh === 'refresh_token') {
+    setCookie(event, 'refresh_token', refreshToken, {
+      httpOnly: true,
+      maxAge: 60 * 60 * 24 * 30,
+      path: '/',
+      sameSite: 'lax',
+    });
+
+    return {
+      accessToken,
+    };
+  }
+
+  throw createError({
+    statusCode: 403,
+    statusMessage: 'Unauthorized, refreshToken can`t be verified',
+  });
+});
+```
