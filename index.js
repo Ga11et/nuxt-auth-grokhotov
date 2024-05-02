@@ -69,9 +69,9 @@ function addModule(path, module) {
     console.error(`Error Adding ${module} to nuxt.config.js.`, error);
   }
 }
-function changeDirectory(directoryPath) {
+async function changeDirectory(directoryPath) {
   try {
-    exec(`cd ${directoryPath}`, (error, stdout, stderr) => {
+    await exec(`cd ${directoryPath}`, (error, stdout, stderr) => {
       if (error) {
         console.error(`Error changing directory: ${error.message}`);
         return;
@@ -258,7 +258,7 @@ if (path) {
 
   addModule(path, 'nuxt-auth-grokhotov');
 
-  changeDirectory(path);
+  await changeDirectory(path);
   await runYarnAdd('nuxt-auth-grokhotov');
   await runYarnAdd('jsonwebtoken');
 
