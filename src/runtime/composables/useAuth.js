@@ -14,7 +14,7 @@ export const useAuth = () => {
   } = config.public.auth.endpoints;
 
   async function login(credentials) {
-    return $fetch('/api/auth' + loginOption.path, {
+    return $fetch('/api' + loginOption.path, {
       method: loginOption.method,
       body: credentials,
     }).then((r) => {
@@ -24,7 +24,7 @@ export const useAuth = () => {
     });
   }
   async function logout() {
-    return $fetch('/api/auth' + logoutOption.path, {
+    return $fetch('/api' + logoutOption.path, {
       method: logoutOption.method,
     }).then((r) => {
       token.value = undefined;
@@ -35,7 +35,7 @@ export const useAuth = () => {
   async function refresh() {
     if (!token.value) return;
 
-    return $fetch('/api/auth' + refreshOption.path, {
+    return $fetch('/api' + refreshOption.path, {
       method: refreshOption.method,
     }).then((r) => {
       token.value = r.token;
@@ -46,7 +46,7 @@ export const useAuth = () => {
   async function get_user() {
     if (!token.value) return;
 
-    return $fetch('/api/auth' + userOption.path, {
+    return $fetch('/api' + userOption.path, {
       method: userOption.method,
       headers: {
         Authorization: `Bearer ${token.value}`,

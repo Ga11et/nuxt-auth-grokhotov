@@ -3,10 +3,10 @@ export default defineNuxtConfig({
 
   auth: {
     endpoints: {
-      login: { path: '/login', method: 'post' },
-      logout: { path: '/logout', method: 'post' },
-      refresh: { path: '/refresh', method: 'get' },
-      user: { path: '/user', method: 'get' },
+      login: { path: '/auth/login', method: 'post' },
+      logout: { path: '/auth/logout', method: 'post' },
+      refresh: { path: '/auth/refresh', method: 'get' },
+      user: { path: '/auth/user', method: 'get' },
     },
   },
 });

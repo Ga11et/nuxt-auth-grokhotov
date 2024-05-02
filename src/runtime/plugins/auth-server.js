@@ -11,7 +11,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const { refresh } = config.public.auth.endpoints;
 
   await $fetch
-    .raw('/api/auth' + refresh.path, {
+    .raw('/api' + refresh.path, {
       method: refresh.method,
       headers: {
         Cookie: `refresh_token=${cookie_refresh.value}`,

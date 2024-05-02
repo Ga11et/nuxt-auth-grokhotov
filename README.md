@@ -39,11 +39,12 @@ npx nuxt-auth-grokhotov
 export default defineNuxtConfig({
   auth: {
     # Управление методоами и путями, на которые уходит запрос при вызове соответствующих функций
+    # В примере приведены значения по умолчанию
     endpoints: {
-      login: { path: '/login', method: 'post' },
-      logout: { path: '/logout', method: 'post' },
-      refresh: { path: '/refresh', method: 'get'},
-      user: { path: '/user', method: 'get' },
+      login: { path: '/auth/login', method: 'post' },
+      logout: { path: '/auth/logout', method: 'post' },
+      refresh: { path: '/auth/refresh', method: 'get' },
+      user: { path: '/auth/user', method: 'get' },
     },
   },
 });
