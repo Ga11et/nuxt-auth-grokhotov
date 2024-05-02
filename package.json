@@ -18,7 +18,8 @@
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
-    "release": "npm run prepack && changelogen --release && npm publish",
+    "release": "npm run prepack && changelogen --release",
+    "publish": "npm publish",
     "lint": "eslint ./src"
   },
   "resolutions": {
@@ -33,12 +34,9 @@
     "@nuxt/kit": "^3.11.2"
   },
   "devDependencies": {
-    "@nuxt/eslint-config": "^0.3.6",
     "@nuxt/module-builder": "^0.5.5",
     "@nuxt/schema": "^3.11.2",
     "changelogen": "^0.5.5",
-    "eslint": "^9.0.0",
-    "nuxt": "^3.11.2",
-    "typescript": "^5.4.5"
+    "nuxt": "^3.11.2"
   }
 }

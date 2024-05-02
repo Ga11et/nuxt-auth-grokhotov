@@ -1,4 +1,6 @@
 export default eventHandler((event) => {
-  deleteCookie(event, 'refresh_token');
+  const config = useRuntimeConfig();
+
+  deleteCookie(event, config.public.auth.cookieName);
   return { status: 'OK' };
 });

@@ -14,6 +14,9 @@ export default defineNuxtModule({
       refresh: { path: '/auth/refresh', method: 'get' },
       user: { path: '/auth/user', method: 'get' },
     },
+    cookieName: 'refresh_token',
+    headerName: 'authorization',
+    headerType: 'Bearer',
   },
   setup(options, nuxt) {
     const logger = useLogger(PACKAGE_NAME);

@@ -36,16 +36,22 @@ npx nuxt-auth-grokhotov
 ## Configuration
 
 ```sh
+# В примере приведены значения по умолчанию
 export default defineNuxtConfig({
   auth: {
     # Управление методоами и путями, на которые уходит запрос при вызове соответствующих функций
-    # В примере приведены значения по умолчанию
     endpoints: {
       login: { path: '/auth/login', method: 'post' },
       logout: { path: '/auth/logout', method: 'post' },
       refresh: { path: '/auth/refresh', method: 'get' },
       user: { path: '/auth/user', method: 'get' },
     },
+    # Управление названием куки, которую ждем с бека для refresh токена
+    cookieName: 'refresh_token',
+    # Управление названием и типом заголовка, который посылаем для расшифровки пользователя по access токену
+    # headerName: headerType token
+    headerName: 'authorization',
+    headerType: 'Bearer',
   },
 });
 ```

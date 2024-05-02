@@ -1,10 +1,10 @@
 import { defineNuxtPlugin, useCookie } from 'nuxt/app';
 import { useAuth } from '../composables/useAuth';
 
-export default defineNuxtPlugin(async (nuxtApp) => {
+export default defineNuxtPlugin(async () => {
   const config = useRuntimeConfig();
   const { token, get_user } = useAuth();
-  const cookie_refresh = useCookie('refresh_token');
+  const cookie_refresh = useCookie(config.public.auth.cookieName);
 
   if (!cookie_refresh.value) return;
 
@@ -14,7 +14,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     .raw('/api' + refresh.path, {
       method: refresh.method,
       headers: {
-        Cookie: `refresh_token=${cookie_refresh.value}`,
+        Cookie: `${config.public.auth.cookieName}=${cookie_refresh.value}`,
       },
     })
     .then((resp) => {
@@ -23,7 +23,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       for (const iterator of resp.headers) {
         if (iterator[0] === 'set-cookie') {
           const cookieParts = iterator[1].split(';')[0].split('=');
-          if (cookieParts[0] === 'refresh_token') {
+          if (cookieParts[0] === config.public.auth.cookieName) {
             new_cookie_refresh = cookieParts[1];
           }
         }

@@ -46,11 +46,15 @@ export const useAuth = () => {
   async function get_user() {
     if (!token.value) return;
 
+    const headerName = config.public.auth.headerName;
+    const headerType = config.public.auth.headerType;
+
+    const headers = {};
+    headers[headerName] = `${headerType} ${token.value}`;
+
     return $fetch('/api' + userOption.path, {
       method: userOption.method,
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-      },
+      headers,
     }).then((r) => {
       data.value = r;
       return r;

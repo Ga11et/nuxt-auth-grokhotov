@@ -1,5 +1,6 @@
 export default eventHandler(async (event) => {
-  const cookie_refresh = getCookie(event, 'refresh_token');
+  const config = useRuntimeConfig();
+  const cookie_refresh = getCookie(event, config.public.auth.cookieName);
 
   if (!cookie_refresh) {
     throw createError({
@@ -11,7 +12,7 @@ export default eventHandler(async (event) => {
   return $fetch
     .raw('/api/php-refresh', {
       headers: {
-        Cookie: 'refresh_token=' + cookie_refresh,
+        Cookie: config.public.auth.cookieName + '=' + cookie_refresh,
       },
     })
     .then(async (resp) => {
