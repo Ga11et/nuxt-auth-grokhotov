@@ -3,8 +3,8 @@ import { useState } from 'nuxt/app';
 export const useAuth = () => {
   const config = useRuntimeConfig();
 
-  const token = useState('auth:token', () => undefined);
-  const data = useState('auth:data', () => undefined);
+  const token = useState(config.public.auth.state.tokenName, () => undefined);
+  const data = useState(config.public.auth.state.dataName, () => undefined);
 
   const {
     login: loginOption,

@@ -11,5 +11,9 @@ export default defineNuxtConfig({
     cookieName: 'refresh_token',
     headerName: 'authorization',
     headerType: 'Bearer',
+    state: {
+      tokenName: 'auth:token',
+      dataName: 'auth:data',
+    },
   },
 });

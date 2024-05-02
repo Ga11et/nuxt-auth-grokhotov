@@ -16,11 +16,8 @@
     "dist"
   ],
   "scripts": {
-    "prepack": "nuxt-module-build build",
-    "dev": "nuxi dev playground",
-    "release": "npm run prepack && changelogen --release",
-    "publish": "npm publish",
-    "lint": "eslint ./src"
+    "build": "nuxt-module-build build",
+    "dev": "nuxi dev playground"
   },
   "resolutions": {
     "strip-ansi": "6.0.1",
@@ -35,8 +32,6 @@
   },
   "devDependencies": {
     "@nuxt/module-builder": "^0.5.5",
-    "@nuxt/schema": "^3.11.2",
-    "changelogen": "^0.5.5",
     "nuxt": "^3.11.2",
     "typescript": "^5.4.5"
   }

@@ -17,6 +17,10 @@ export default defineNuxtModule({
     cookieName: 'refresh_token',
     headerName: 'authorization',
     headerType: 'Bearer',
+    state: {
+      tokenName: 'auth:token',
+      dataName: 'auth:data',
+    },
   },
   setup(options, nuxt) {
     const logger = useLogger(PACKAGE_NAME);
