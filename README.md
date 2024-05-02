@@ -33,6 +33,22 @@ npx nuxt-auth-grokhotov
   - `GET /user`
     - Запрос на получение пользователя из `access` токена при помощи расшифровки `jsonwebtoken`
 
+## Configuration
+
+```sh
+export default defineNuxtConfig({
+  auth: {
+    # Управление методоами и путями, на которые уходит запрос при вызове соответствующих функций
+    endpoints: {
+      login: { path: '/login', method: 'post' },
+      logout: { path: '/logout', method: 'post' },
+      refresh: { path: '/refresh', method: 'get'},
+      user: { path: '/user', method: 'get' },
+    },
+  },
+});
+```
+
 ## Альтернативный Quick Start
 
 ```sh

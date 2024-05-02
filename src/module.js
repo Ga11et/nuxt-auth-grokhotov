@@ -7,13 +7,23 @@ export default defineNuxtModule({
     name: PACKAGE_NAME,
     configKey: 'auth',
   },
-  defaults: {},
-  setup() {
+  defaults: {
+    endpoints: {
+      login: { path: '/login', method: 'post' },
+      logout: { path: '/logout', method: 'post' },
+      refresh: { path: '/refresh', method: 'get' },
+      user: { path: '/user', method: 'get' },
+    },
+  },
+  setup(options, nuxt) {
     const logger = useLogger(PACKAGE_NAME);
 
     logger.info('`nuxt-auth` setup starting');
 
     const { resolve } = createResolver(import.meta.url);
+
+    nuxt.options.runtimeConfig = nuxt.options.runtimeConfig || { public: {} };
+    nuxt.options.runtimeConfig.public.auth = options;
 
     addImports([
       {

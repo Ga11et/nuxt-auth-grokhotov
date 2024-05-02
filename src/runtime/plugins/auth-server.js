@@ -1,14 +1,18 @@
 import { defineNuxtPlugin, useCookie } from 'nuxt/app';
 import { useAuth } from '../composables/useAuth';
 
-export default defineNuxtPlugin(async () => {
+export default defineNuxtPlugin(async (nuxtApp) => {
+  const config = useRuntimeConfig();
   const { token, get_user } = useAuth();
   const cookie_refresh = useCookie('refresh_token');
 
   if (!cookie_refresh.value) return;
 
+  const { refresh } = config.public.auth.endpoints;
+
   await $fetch
-    .raw('/api/auth/refresh', {
+    .raw('/api/auth' + refresh.path, {
+      method: refresh.method,
       headers: {
         Cookie: `refresh_token=${cookie_refresh.value}`,
       },

@@ -1,12 +1,21 @@
 import { useState } from 'nuxt/app';
 
 export const useAuth = () => {
+  const config = useRuntimeConfig();
+
   const token = useState('auth:token', () => undefined);
   const data = useState('auth:data', () => undefined);
 
-  function login(credentials) {
-    return $fetch('/api/auth/login', {
-      method: 'POST',
+  const {
+    login: loginOption,
+    logout: logoutOption,
+    refresh: refreshOption,
+    user: userOption,
+  } = config.public.auth.endpoints;
+
+  async function login(credentials) {
+    return $fetch('/api/auth' + loginOption.path, {
+      method: loginOption.method,
       body: credentials,
     }).then((r) => {
       token.value = r.token;
@@ -14,28 +23,31 @@ export const useAuth = () => {
       return r;
     });
   }
-  function logout() {
-    return $fetch('/api/auth/logout', {
-      method: 'POST',
+  async function logout() {
+    return $fetch('/api/auth' + logoutOption.path, {
+      method: logoutOption.method,
     }).then((r) => {
       token.value = undefined;
       data.value = undefined;
       return r;
     });
   }
-  function refresh() {
+  async function refresh() {
     if (!token.value) return;
 
-    return $fetch('/api/auth/refresh').then((r) => {
+    return $fetch('/api/auth' + refreshOption.path, {
+      method: refreshOption.method,
+    }).then((r) => {
       token.value = r.token;
 
       return r;
     });
   }
-  function get_user() {
+  async function get_user() {
     if (!token.value) return;
 
-    return $fetch('/api/auth/user', {
+    return $fetch('/api/auth' + userOption.path, {
+      method: userOption.method,
       headers: {
         Authorization: `Bearer ${token.value}`,
       },
