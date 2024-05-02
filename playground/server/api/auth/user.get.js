@@ -1,22 +1,20 @@
 import jwt from 'jsonwebtoken';
 
-const extractToken = (type, header) => {
-  const [, token] = header.split(`${type} `);
+const extractToken = (authorization) => {
+  const [, token] = authorization.split('Bearer ');
   return token;
 };
 
 export default eventHandler((event) => {
-  const config = useRuntimeConfig();
-
-  const authorization = getRequestHeader(event, config.public.auth.headerName);
+  const authorization = getRequestHeader(event, 'authorization');
   if (!authorization) {
     throw createError({
       statusCode: 403,
-      statusMessage: config.public.auth.headerName + ' header is required',
+      statusMessage: 'authorization header is required',
     });
   }
 
-  const token = extractToken(config.public.auth.headerType, authorization);
+  const token = extractToken(authorization);
 
   return jwt.decode(token);
 });
