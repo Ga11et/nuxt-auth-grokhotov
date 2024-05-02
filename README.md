@@ -52,6 +52,11 @@ export default defineNuxtConfig({
     # headerName: headerType token
     headerName: 'authorization',
     headerType: 'Bearer',
+    # Управление названиями полей в глобальном объекте Nuxt 3
+    state: {
+      tokenName: 'auth:token',
+      dataName: 'auth:data',
+    },
   },
 });
 ```
