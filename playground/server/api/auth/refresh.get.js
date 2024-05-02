@@ -11,7 +11,7 @@ export default eventHandler(async (event) => {
   return $fetch
     .raw('/api/php-refresh', {
       headers: {
-        Cookie: `refresh_token=${cookie_refresh}`,
+        Cookie: 'refresh_token=' + cookie_refresh,
       },
     })
     .then(async (resp) => {

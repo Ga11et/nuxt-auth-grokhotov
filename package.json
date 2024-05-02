@@ -27,6 +27,9 @@
     "string-width": "4.2.2",
     "wrap-ansi": "7.0.0"
   },
+  "bin": {
+    "my-npx-command": "./index.js"
+  },
   "dependencies": {
     "@nuxt/kit": "^3.11.2"
   },

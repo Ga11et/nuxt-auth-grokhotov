@@ -3,28 +3,7 @@
 ## Quick Start
 
 ```sh
-yarn add nuxt-auth-grokhotov
-```
-
-**Добавить в nuxt.config.js**
-
-```sh
-export default defineNuxtConfig({
-  modules: ['nuxt-auth-grokhotov'],
-});
-```
-
-**Создать 6 файлов в папке с проектом**
-
-```sh
-/server/api/auth/login.post.js
-/server/api/auth/logout.post.js
-/server/api/auth/refresh.get.js
-/server/api/auth/user.get.js
-
-# Эти два файла создаются как моковые эндпоинты, которые будут находиться на бэке
-/server/api/php-login.js
-/server/api/php-refresh.js
+npx nuxt-auth-grokhotov
 ```
 
 ## Features
@@ -54,7 +33,35 @@ export default defineNuxtConfig({
   - `GET /user`
     - Запрос на получение пользователя из `access` токена при помощи расшифровки `jsonwebtoken`
 
-## Начальная настройка
+## Альтернативный Quick Start
+
+```sh
+yarn add nuxt-auth-grokhotov
+```
+
+**Добавить в nuxt.config.js**
+
+```sh
+export default defineNuxtConfig({
+  modules: ['nuxt-auth-grokhotov'],
+});
+```
+
+**Создать 6 файлов в папке с проектом**
+**Пример заполнения файлов привезен ниже в блоке _Начальная настройка_**
+
+```sh
+/server/api/auth/login.post.js
+/server/api/auth/logout.post.js
+/server/api/auth/refresh.get.js
+/server/api/auth/user.get.js
+
+# Эти два файла создаются как моковые эндпоинты, которые будут находиться на бэке
+/server/api/php-login.js
+/server/api/php-refresh.js
+```
+
+### Начальная настройка
 
 _/server/api/auth/login.post.js_
 

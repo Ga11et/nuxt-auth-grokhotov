@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 const extractToken = (authorization) => {
-  const [, token] = authorization.split(`Bearer `);
+  const [, token] = authorization.split('Bearer ');
   return token;
 };
 
