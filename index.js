@@ -87,6 +87,7 @@ function changeDirectory(directoryPath) {
   }
 }
 function runYarnAdd(packageName) {
+  console.log(`Started fetching ${packageName}`);
   const command = `yarn add ${packageName}`;
 
   exec(command, (error, stdout, stderr) => {
@@ -101,7 +102,6 @@ function runYarnAdd(packageName) {
     }
 
     console.log(`Yarn add command executed successfully.`);
-    console.log(`stdout: ${stdout}`);
   });
 }
 
@@ -264,6 +264,7 @@ if (path) {
 
   changeDirectory(path);
   runYarnAdd('nuxt-auth-grokhotov');
+  runYarnAdd('jsonwebtoken');
 } else {
   console.error('Ошибка исполнения скрипта, nuxt.config.js не найден');
 }
