@@ -70,6 +70,11 @@ function addModule(path, module) {
   }
 }
 async function changeDirectory(directoryPath) {
+  if (directoryPath === '.') {
+    console.error(`Error changing directory: cannot change "."`);
+    return;
+  }
+
   try {
     await exec(`cd ${directoryPath}`, (error, stdout, stderr) => {
       if (error) {
@@ -83,6 +88,7 @@ async function changeDirectory(directoryPath) {
       }
 
       console.log(`Directory changed successfully.`);
+      console.log(stdout);
     });
   } catch (err) {
     console.error(`Error changing directory: ${err.message}`);
