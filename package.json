@@ -1,6 +1,6 @@
 {
   "name": "nuxt-auth-grokhotov",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Auth nuxt 3 module",
   "repository": "https://github.com/Ga11et/nuxt-auth-grokhotov",
   "license": "MIT",
@@ -18,9 +18,8 @@
   "scripts": {
     "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
-    "release": "npm run lint && npm run test && npm run prepack && changelogen --release && npm publish && git push --follow-tags",
-    "lint": "eslint ./src",
-    "test": "echo \"Error: no test specified\""
+    "release": "npm run prepack && changelogen --release",
+    "lint": "eslint ./src"
   },
   "resolutions": {
     "strip-ansi": "6.0.1",
