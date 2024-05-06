@@ -53,9 +53,9 @@ function findFileRecursively(directoryPath, fileName) {
     console.error(`Error finding ${fileName} in ${directoryPath}:`, err);
   }
 }
-function addModule(path, module) {
+function addModule(path, module, file = 'nuxt.config.js') {
   try {
-    const configFile = fs.readFileSync(path + '/nuxt.config.js', 'utf8');
+    const configFile = fs.readFileSync(path + '/' + file, 'utf8');
 
     if (/modules:\s\[\D*nuxt-auth-grokhotov\D*\]/g.test(configFile)) {
       console.log(`${module} already added to nuxt.config.js.`);
@@ -248,9 +248,11 @@ export default eventHandler(async (event) => {
 `;
 
 let path = findFileRecursively('.', 'nuxt.config.js');
+let file = 'nuxt.config.js';
 
 if (!path) {
   path = findFileRecursively('.', 'nuxt.config.ts');
+  file = 'nuxt.config.ts';
 }
 
 if (path) {
@@ -265,7 +267,7 @@ if (path) {
   createFile(path + '/server/api/php-login.js', php_login);
   createFile(path + '/server/api/php-refresh.js', php_refresh);
 
-  addModule(path, 'nuxt-auth-grokhotov');
+  addModule(path, 'nuxt-auth-grokhotov', file);
 
   changeDirectory(path).then(() => {
     runYarnAdd('nuxt-auth-grokhotov').then(() => {
