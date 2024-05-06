@@ -34,7 +34,9 @@
     "access token"
   ],
   "dependencies": {
-    "@nuxt/kit": "^3.11.2"
+    "@nuxt/kit": "^3.11.2",
+    "jsonwebtoken": "^9.0.2",
+    "nuxt-auth-grokhotov": "^0.2.9"
   },
   "devDependencies": {
     "@nuxt/module-builder": "^0.5.5",

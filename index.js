@@ -76,20 +76,24 @@ async function changeDirectory(directoryPath) {
   }
 
   try {
-    await exec(`cd ${directoryPath}`, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`Error changing directory: ${error.message}`);
-        return;
-      }
+    const promise = new Promise((resolve, reject) => {
+      exec(`cd ${directoryPath}`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`Error changing directory: ${error.message}`);
+          reject();
+        }
 
-      if (stderr) {
-        console.error(`Error changing directory: ${stderr}`);
-        return;
-      }
+        if (stderr) {
+          console.error(`Error changing directory: ${stderr}`);
+          reject();
+        }
 
-      console.log(`Directory changed successfully to ${directoryPath}.`);
-      console.log(stdout);
+        console.log(`Directory changed successfully to ${directoryPath}.`);
+        resolve();
+      });
     });
+
+    return await promise;
   } catch (err) {
     console.error(`Error changing directory: ${err.message}`);
   }
@@ -250,6 +254,8 @@ export default eventHandler(async (event) => {
 let path = findFileRecursively('.', 'nuxt.config.js');
 let file = 'nuxt.config.js';
 
+console.log(path);
+
 if (!path) {
   path = findFileRecursively('.', 'nuxt.config.ts');
   file = 'nuxt.config.ts';
@@ -269,13 +275,10 @@ if (path) {
 
   addModule(path, 'nuxt-auth-grokhotov', file);
 
-  changeDirectory(path).then(() => {
-    runYarnAdd('nuxt-auth-grokhotov').then(() => {
-      runYarnAdd('jsonwebtoken').then(() => {
-        console.log('Успешное завершение скрипта');
-      });
-    });
-  });
+  await changeDirectory(path);
+  await runYarnAdd('nuxt-auth-grokhotov');
+  await runYarnAdd('jsonwebtoken');
+  console.log('Успешное завершение скрипта');
 } else {
   console.error('Ошибка исполнения скрипта, nuxt.config.js не найден');
 }
