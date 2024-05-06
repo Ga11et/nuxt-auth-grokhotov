@@ -1,4 +1,4 @@
-import { useState } from 'nuxt/app';
+import { useRuntimeConfig, useState } from 'nuxt/app';
 
 export const useAuth = () => {
   const config = useRuntimeConfig();

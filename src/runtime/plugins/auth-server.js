@@ -1,4 +1,4 @@
-import { defineNuxtPlugin, useCookie } from 'nuxt/app';
+import { defineNuxtPlugin, useCookie, useRuntimeConfig } from 'nuxt/app';
 import { useAuth } from '../composables/useAuth';
 
 export default defineNuxtPlugin(async () => {
