@@ -87,7 +87,7 @@ async function changeDirectory(directoryPath) {
         return;
       }
 
-      console.log(`Directory changed successfully.`);
+      console.log(`Directory changed successfully to ${directoryPath}.`);
       console.log(stdout);
     });
   } catch (err) {
@@ -247,7 +247,11 @@ export default eventHandler(async (event) => {
 });
 `;
 
-const path = findFileRecursively('.', 'nuxt.config.js');
+let path = findFileRecursively('.', 'nuxt.config.js');
+
+if (!path) {
+  path = findFileRecursively('.', 'nuxt.config.ts');
+}
 
 if (path) {
   createFolder(path + '/server');
@@ -263,11 +267,13 @@ if (path) {
 
   addModule(path, 'nuxt-auth-grokhotov');
 
-  await changeDirectory(path);
-  await runYarnAdd('nuxt-auth-grokhotov');
-  await runYarnAdd('jsonwebtoken');
-
-  console.log('Успешное завершение скрипта');
+  changeDirectory(path).then(() => {
+    runYarnAdd('nuxt-auth-grokhotov').then(() => {
+      runYarnAdd('jsonwebtoken').then(() => {
+        console.log('Успешное завершение скрипта');
+      });
+    });
+  });
 } else {
   console.error('Ошибка исполнения скрипта, nuxt.config.js не найден');
 }
