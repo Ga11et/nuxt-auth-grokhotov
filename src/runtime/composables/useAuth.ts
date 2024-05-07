@@ -8,12 +8,23 @@ export const useAuth = () => {
   const data = useState(config.public.auth.state.dataName, () => undefined);
 
   const {
+    register: registerOption,
     login: loginOption,
     logout: logoutOption,
     refresh: refreshOption,
     user: userOption,
   } = config.public.auth.endpoints;
 
+  async function register(payload: BodyInit): Promise<TokenResponse> {
+    return $fetch<TokenResponse>('/api' + registerOption.path, {
+      method: registerOption.method,
+      body: payload,
+    }).then((r) => {
+      token.value = r.token;
+      get_user();
+      return r;
+    });
+  }
   async function login(credentials: CredentialsRequest): Promise<TokenResponse> {
     return $fetch<TokenResponse>('/api' + loginOption.path, {
       method: loginOption.method,
@@ -65,6 +76,7 @@ export const useAuth = () => {
   return {
     data,
     token,
+    register,
     login,
     logout,
     refresh,

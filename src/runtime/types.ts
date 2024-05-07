@@ -1,5 +1,6 @@
 export type moduleOptions = {
   endpoints: {
+    register: { path: string; method: HTTP_Method };
     login: { path: string; method: HTTP_Method };
     logout: { path: string; method: HTTP_Method };
     refresh: { path: string; method: HTTP_Method };

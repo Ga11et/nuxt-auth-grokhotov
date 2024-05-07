@@ -20,6 +20,6 @@ export default eventHandler(async (event) => {
 
   throw createError({
     statusCode: 422,
-    statusMessage: 'Wrong credentials',
+    message: 'Wrong credentials',
   });
 });

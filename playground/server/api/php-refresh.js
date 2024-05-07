@@ -20,6 +20,6 @@ export default eventHandler(async (event) => {
 
   throw createError({
     statusCode: 403,
-    statusMessage: 'Unauthorized, refreshToken cant be verified',
+    message: 'Unauthorized, refreshToken cant be verified',
   });
 });

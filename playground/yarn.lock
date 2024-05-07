@@ -3920,10 +3920,19 @@ nuxi@^3.11.1:
   optionalDependencies:
     fsevents "~2.3.3"
 
-nuxt-auth-grokhotov@^0.2.10, nuxt-auth-grokhotov@^0.2.9:
+nuxt-auth-grokhotov@^0.2.9:
   version "0.2.10"
   resolved "https://registry.yarnpkg.com/nuxt-auth-grokhotov/-/nuxt-auth-grokhotov-0.2.10.tgz#4ccd5484e1e15ddaa4defa41133f952a362a104d"
   integrity sha512-2m+Z35b/gpeMPVU/Yb2Ay9Yh/V6zRFt6bgbWZ/mzEzIRe0qAj5M2/6NbeqwGmxpwvM0/YoSs38hidBxmwDxz4A==
+  dependencies:
+    "@nuxt/kit" "^3.11.2"
+    jsonwebtoken "^9.0.2"
+    nuxt-auth-grokhotov "^0.2.9"
+
+nuxt-auth-grokhotov@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/nuxt-auth-grokhotov/-/nuxt-auth-grokhotov-0.3.0.tgz#e7c0b9e0a75a13a18ab1ecd347e19a427427c977"
+  integrity sha512-hLdefXpwdQcHQ2wmy09infRSYacpx3x+PFQ/TcxR4TGm/EHAQse6dZIypMhkdCMHRX1bfseXx24vgJ/aZvZASQ==
   dependencies:
     "@nuxt/kit" "^3.11.2"
     jsonwebtoken "^9.0.2"

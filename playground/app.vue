@@ -3,34 +3,49 @@
     <h1>Nuxt auth</h1>
 
     <form>
-      <input v-model="form.name" />
-      <input v-model="form.pass" />
+      <input v-model="registerForm.name" />
+      <input v-model="registerForm.pass" />
 
-      <button @click.prevent="loginHandler">sign in</button>
+      <button @click.prevent="registerHandler">Зарегистрироваться</button>
+    </form>
+    <pre>login: name, password: pass</pre>
+    <form>
+      <input v-model="loginForm.name" />
+      <input v-model="loginForm.pass" />
+
+      <button @click.prevent="loginHandler">Войти</button>
     </form>
     <form>
-      <button @click.prevent="logoutHandler">sign out</button>
+      <button @click.prevent="logoutHandler">Выйти</button>
     </form>
 
     <pre>{{ data }}</pre>
     <pre>{{ token }}</pre>
-
-    <pre>login: name, password: pass</pre>
   </div>
 </template>
 
 <script setup>
-const { data, login, logout, token } = useAuth();
+const { data, register, login, logout, token } = useAuth();
 
-const form = reactive({
+const registerForm = reactive({
+  name: '',
+  pass: '',
+});
+const loginForm = reactive({
   name: '',
   pass: '',
 });
 
+const registerHandler = () => {
+  register(registerForm).then((r) => {
+    registerForm.name = '';
+    registerForm.pass = '';
+  });
+};
 const loginHandler = () => {
-  login(form).then((r) => {
-    form.name = '';
-    form.pass = '';
+  login(loginForm).then((r) => {
+    loginForm.name = '';
+    loginForm.pass = '';
   });
 };
 const logoutHandler = () => {

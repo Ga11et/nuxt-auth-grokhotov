@@ -1,8 +1,9 @@
 export default defineNuxtConfig({
-  modules: ['../src/module'],
+  modules: ['../src/module', 'nuxt-auth-grokhotov'],
 
   auth: {
     endpoints: {
+      register: { path: '/auth/register', method: 'POST' },
       login: { path: '/auth/login', method: 'POST' },
       logout: { path: '/auth/logout', method: 'POST' },
       refresh: { path: '/auth/refresh', method: 'GET' },

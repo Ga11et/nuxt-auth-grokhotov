@@ -4,7 +4,7 @@ export default eventHandler(async (event) => {
   if (!cookie_refresh) {
     throw createError({
       statusCode: 403,
-      statusMessage: 'Unauthorized, refreshToken is undefined',
+      message: 'Unauthorized, refreshToken is undefined',
     });
   }
 
@@ -28,7 +28,7 @@ export default eventHandler(async (event) => {
     .catch(() => {
       throw createError({
         statusCode: 422,
-        statusMessage: 'refresh failed, check token',
+        message: 'refresh failed, check token',
       });
     });
 });

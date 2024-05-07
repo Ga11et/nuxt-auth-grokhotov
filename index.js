@@ -80,8 +80,8 @@ function addModule(path, module, file = 'nuxt.config.js') {
     }
 
     const updatedConfig = configFile.replace(/modules:\s\[(\D+)\]/g, `modules: [$1, '${module}']`);
-    fs.promises.writeFile(path + '/nuxt.config.js', updatedConfig);
-    console.log(`${module} successfully added to nuxt.config.js.`);
+    fs.promises.writeFile(path + '/' + file, updatedConfig);
+    console.log(`${module} successfully added to ${file}.`);
   } catch (error) {
     console.error(`Error Adding ${module} to nuxt.config.js.`, error);
   }
@@ -98,6 +98,33 @@ async function runYarnAdd(path, packageName) {
   }
 }
 
+const register = `export default eventHandler(async (event) => {
+  const body = await readBody(event);
+
+  return $fetch
+    .raw('/api/php-register', {
+      method: 'POST',
+      body,
+    })
+    .then((resp) => {
+      for (const iterator of resp.headers) {
+        if (iterator[0] === 'set-cookie') {
+          appendResponseHeader(event, 'set-cookie', iterator[1]);
+        }
+      }
+
+      return {
+        token: resp._data.accessToken,
+      };
+    })
+    .catch((err) => {
+      throw createError({
+        statusCode: 422,
+        message: 'login failed, check cridentials',
+      });
+    });
+});
+`;
 const login = `export default eventHandler(async (event) => {
   const body = await readBody(event);
 
@@ -120,7 +147,7 @@ const login = `export default eventHandler(async (event) => {
     .catch((err) => {
       throw createError({
         statusCode: 422,
-        statusMessage: 'login failed, check cridentials',
+        message: 'login failed, check cridentials',
       });
     });
 });
@@ -136,7 +163,7 @@ const refresh = `export default eventHandler(async (event) => {
   if (!cookie_refresh) {
     throw createError({
       statusCode: 403,
-      statusMessage: 'Unauthorized, refreshToken is undefined',
+      message: 'Unauthorized, refreshToken is undefined',
     });
   }
 
@@ -160,7 +187,7 @@ const refresh = `export default eventHandler(async (event) => {
     .catch(() => {
       throw createError({
         statusCode: 422,
-        statusMessage: 'refresh failed, check token',
+        message: 'refresh failed, check token',
       });
     });
 });
@@ -177,13 +204,39 @@ export default eventHandler((event) => {
   if (!authorization) {
     throw createError({
       statusCode: 403,
-      statusMessage: 'authorization header is required',
+      message: 'authorization header is required',
     });
   }
 
   const token = extractToken(authorization);
 
   return jwt.decode(token);
+});
+`;
+const php_register = `const accessToken =
+'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlciI6eyJ1c2VybmFtZSI6InVzZXJuYW1lIiwicGljdHVyZSI6Imh0dHBzOi8vZ2l0aHViLmNvbS9udXh0LnBuZyIsIm5hbWUiOiJVc2VyIHVzZXJuYW1lIn0sImlhdCI6MTUxNjIzOTAyMn0.7TFU_1A10fXh0u2Hn7UZ0XXZTL_A0O2dNBpzUFeCIEk';
+const refreshToken = 'refresh_token';
+
+export default eventHandler(async (event) => {
+const body = await readBody(event);
+
+if (body.name && body.pass) {
+  setCookie(event, 'refresh_token', refreshToken, {
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 30,
+    path: '/',
+    sameSite: 'lax',
+  });
+
+  return {
+    accessToken,
+  };
+}
+
+throw createError({
+  statusCode: 422,
+  message: 'Пропущены обязательные поля',
+});
 });
 `;
 const php_login = `const accessToken =
@@ -208,7 +261,7 @@ export default eventHandler(async (event) => {
 
   throw createError({
     statusCode: 422,
-    statusMessage: 'Wrong credentials',
+    message: 'Wrong credentials',
   });
 });
 `;
@@ -234,7 +287,7 @@ export default eventHandler(async (event) => {
 
   throw createError({
     statusCode: 403,
-    statusMessage: 'Unauthorized, refreshToken cant be verified',
+    message: 'Unauthorized, refreshToken cant be verified',
   });
 });
 `;
@@ -254,10 +307,12 @@ if (path) {
   createFolder(path + '/server/api');
   createFolder(path + '/server/api/auth');
 
+  createFile(path + '/server/api/auth/register.post.js', register);
   createFile(path + '/server/api/auth/login.post.js', login);
   createFile(path + '/server/api/auth/logout.post.js', logout);
   createFile(path + '/server/api/auth/refresh.get.js', refresh);
   createFile(path + '/server/api/auth/user.get.js', user);
+  createFile(path + '/server/api/php-register.js', php_register);
   createFile(path + '/server/api/php-login.js', php_login);
   createFile(path + '/server/api/php-refresh.js', php_refresh);
 

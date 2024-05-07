@@ -10,7 +10,7 @@ export default eventHandler((event) => {
   if (!authorization) {
     throw createError({
       statusCode: 403,
-      statusMessage: 'authorization header is required',
+      message: 'authorization header is required',
     });
   }
 
