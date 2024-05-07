@@ -3,8 +3,25 @@
 import fs from 'fs';
 import cp from 'child_process';
 import util from 'util';
+import readline from 'readline';
 
 const exec = util.promisify(cp.exec);
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+const prompt = (question) => {
+  return new Promise((resolve) => {
+    rl.question(question, (answer) => {
+      rl.close();
+      if (answer === 'n') resolve(false);
+
+      resolve(true);
+    });
+  });
+};
 
 function createFile(filePath, content) {
   try {
@@ -69,41 +86,12 @@ function addModule(path, module, file = 'nuxt.config.js') {
     console.error(`Error Adding ${module} to nuxt.config.js.`, error);
   }
 }
-async function changeDirectory(directoryPath) {
-  if (directoryPath === '.') {
-    console.error(`Error changing directory: cannot change "."`);
-    return;
-  }
-
-  try {
-    const promise = new Promise((resolve, reject) => {
-      exec(`cd ${directoryPath}`, (error, stdout, stderr) => {
-        if (error) {
-          console.error(`Error changing directory: ${error.message}`);
-          reject();
-        }
-
-        if (stderr) {
-          console.error(`Error changing directory: ${stderr}`);
-          reject();
-        }
-
-        console.log(`Directory changed successfully to ${directoryPath}.`);
-        resolve();
-      });
-    });
-
-    return await promise;
-  } catch (err) {
-    console.error(`Error changing directory: ${err.message}`);
-  }
-}
-async function runYarnAdd(packageName) {
+async function runYarnAdd(path, packageName) {
   console.log(`Started fetching ${packageName}`);
   const command = `yarn add ${packageName}`;
 
   try {
-    const { stdout } = await exec(command);
+    const { stdout } = await exec(command, { cwd: path });
     console.log(`Yarn add command executed successfully.\n${stdout}`);
   } catch (error) {
     console.error(`Error running yarn add: ${error.message}`);
@@ -251,15 +239,15 @@ export default eventHandler(async (event) => {
 });
 `;
 
-let path = findFileRecursively('.', 'nuxt.config.js');
-let file = 'nuxt.config.js';
+const isTs = await prompt('Используется ли typescript? Напишите n если нет\n');
 
-console.log(path);
-
-if (!path) {
-  path = findFileRecursively('.', 'nuxt.config.ts');
-  file = 'nuxt.config.ts';
+let fileName = '';
+if (isTs) {
+  fileName = 'nuxt.config.ts';
+} else {
+  fileName = 'nuxt.config.js';
 }
+let path = findFileRecursively('.', fileName);
 
 if (path) {
   createFolder(path + '/server');
@@ -273,11 +261,10 @@ if (path) {
   createFile(path + '/server/api/php-login.js', php_login);
   createFile(path + '/server/api/php-refresh.js', php_refresh);
 
-  addModule(path, 'nuxt-auth-grokhotov', file);
+  addModule(path, 'nuxt-auth-grokhotov', fileName);
 
-  await changeDirectory(path);
-  await runYarnAdd('nuxt-auth-grokhotov');
-  await runYarnAdd('jsonwebtoken');
+  await runYarnAdd(path, 'nuxt-auth-grokhotov');
+  await runYarnAdd(path, 'jsonwebtoken');
   console.log('Успешное завершение скрипта');
 } else {
   console.error('Ошибка исполнения скрипта, nuxt.config.js не найден');

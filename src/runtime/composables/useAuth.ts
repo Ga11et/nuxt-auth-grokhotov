@@ -1,9 +1,10 @@
 import { useRuntimeConfig, useState } from 'nuxt/app';
+import { type CredentialsRequest, type LogoutResponse, type TokenResponse, type UserResponse } from '../types';
 
 export const useAuth = () => {
   const config = useRuntimeConfig();
 
-  const token = useState(config.public.auth.state.tokenName, () => undefined);
+  const token = useState<string | undefined>(config.public.auth.state.tokenName, () => undefined);
   const data = useState(config.public.auth.state.dataName, () => undefined);
 
   const {
@@ -13,8 +14,8 @@ export const useAuth = () => {
     user: userOption,
   } = config.public.auth.endpoints;
 
-  async function login(credentials) {
-    return $fetch('/api' + loginOption.path, {
+  async function login(credentials: CredentialsRequest): Promise<TokenResponse> {
+    return $fetch<TokenResponse>('/api' + loginOption.path, {
       method: loginOption.method,
       body: credentials,
     }).then((r) => {
@@ -23,8 +24,8 @@ export const useAuth = () => {
       return r;
     });
   }
-  async function logout() {
-    return $fetch('/api' + logoutOption.path, {
+  async function logout(): Promise<LogoutResponse> {
+    return $fetch<LogoutResponse>('/api' + logoutOption.path, {
       method: logoutOption.method,
     }).then((r) => {
       token.value = undefined;
@@ -32,28 +33,27 @@ export const useAuth = () => {
       return r;
     });
   }
-  async function refresh() {
-    console.log('refresh');
-    if (!token.value) return;
+  async function refresh(): Promise<TokenResponse> {
+    if (!token.value) return { token: undefined };
 
-    return $fetch('/api' + refreshOption.path, {
+    return $fetch<TokenResponse>('/api' + refreshOption.path, {
       method: refreshOption.method,
     }).then((r) => {
-      token.value = r.token;
+      token.value = r?.token;
 
       return r;
     });
   }
-  async function get_user() {
+  async function get_user(): Promise<UserResponse> {
     if (!token.value) return;
 
     const headerName = config.public.auth.headerName;
     const headerType = config.public.auth.headerType;
 
-    const headers = {};
+    const headers: HeadersInit = {};
     headers[headerName] = `${headerType} ${token.value}`;
 
-    return $fetch('/api' + userOption.path, {
+    return $fetch<UserResponse>('/api' + userOption.path, {
       method: userOption.method,
       headers,
     }).then((r) => {

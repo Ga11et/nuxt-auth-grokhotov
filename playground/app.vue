@@ -3,17 +3,13 @@
     <h1>Nuxt auth</h1>
 
     <form>
-      <input v-model="form.name">
-      <input v-model="form.pass">
+      <input v-model="form.name" />
+      <input v-model="form.pass" />
 
-      <button @click.prevent="loginHandler">
-        sign in
-      </button>
+      <button @click.prevent="loginHandler">sign in</button>
     </form>
     <form>
-      <button @click.prevent="logoutHandler">
-        sign out
-      </button>
+      <button @click.prevent="logoutHandler">sign out</button>
     </form>
 
     <pre>{{ data }}</pre>

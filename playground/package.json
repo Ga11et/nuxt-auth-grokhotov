@@ -10,7 +10,7 @@
   "dependencies": {
     "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.11.2",
-    "nuxt-auth-grokhotov": "^0.2.2"
+    "nuxt-auth-grokhotov": "^0.2.10"
   },
   "devDependencies": {
     "sass": "^1.75.0"

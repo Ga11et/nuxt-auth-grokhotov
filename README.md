@@ -41,10 +41,10 @@ export default defineNuxtConfig({
   auth: {
     # Управление методоами и путями, на которые уходит запрос при вызове соответствующих функций
     endpoints: {
-      login: { path: '/auth/login', method: 'post' },
-      logout: { path: '/auth/logout', method: 'post' },
-      refresh: { path: '/auth/refresh', method: 'get' },
-      user: { path: '/auth/user', method: 'get' },
+      login: { path: '/auth/login', method: 'POST' },
+      logout: { path: '/auth/logout', method: 'POST' },
+      refresh: { path: '/auth/refresh', method: 'GET' },
+      user: { path: '/auth/user', method: 'GET' },
     },
     # Управление названием куки, которую ждем с бека для refresh токена
     cookieName: 'refresh_token',
