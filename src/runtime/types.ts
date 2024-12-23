@@ -18,10 +18,7 @@ export type moduleOptions = {
   };
 };
 
-export type CredentialsRequest = {
-  name: string;
-  pass: string;
-};
+export type Credentials = { username?: string; email?: string; password?: string } & Record<string, any>;
 
 export type TokenResponse = {
   token: string | undefined;

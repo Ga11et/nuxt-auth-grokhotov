@@ -1,5 +1,5 @@
 import { useRuntimeConfig, useState } from 'nuxt/app';
-import { type CredentialsRequest, type LogoutResponse, type TokenResponse, type UserResponse } from '../types';
+import { type Credentials, type LogoutResponse, type TokenResponse, type UserResponse } from '../types';
 
 export const useAuth = () => {
   const config = useRuntimeConfig();
@@ -15,7 +15,7 @@ export const useAuth = () => {
     user: userOption,
   } = config.public.auth.endpoints;
 
-  async function register(payload: BodyInit): Promise<TokenResponse> {
+  async function register(payload: Credentials): Promise<TokenResponse> {
     return $fetch<TokenResponse>('/api' + registerOption.path, {
       method: registerOption.method,
       body: payload,
@@ -25,7 +25,7 @@ export const useAuth = () => {
       return r;
     });
   }
-  async function login(credentials: CredentialsRequest): Promise<TokenResponse> {
+  async function login(credentials: Credentials): Promise<TokenResponse> {
     return $fetch<TokenResponse>('/api' + loginOption.path, {
       method: loginOption.method,
       body: credentials,
